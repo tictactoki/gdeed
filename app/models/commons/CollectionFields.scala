@@ -9,6 +9,7 @@ object CollectionFields {
   final val Name = "name"
   final val FirstName = "firstName"
   final val Password = "password"
-
+  final val NickName = "nickName"
+  final val Email = "email"
 
 }

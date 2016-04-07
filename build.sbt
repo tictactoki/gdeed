@@ -14,6 +14,7 @@ libraryDependencies ++= Seq(
   ws,
   "org.reactivemongo" %% "play2-reactivemongo" % "0.11.11",
   "org.scalatestplus.play" %% "scalatestplus-play" % "1.5.0-RC1" % Test,
+  "org.mindrot" % "jbcrypt" % "0.3m",
   "org.webjars" %% "webjars-play" % "2.4.0-1",
   "org.webjars" % "react" % "0.14.7",
   "org.webjars" % "jquery" % "2.1.4",
