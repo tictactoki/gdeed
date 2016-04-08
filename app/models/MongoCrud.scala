@@ -35,12 +35,4 @@ trait MongoCrud[T] {
     }
   }
 
-  protected def createId(implicit collection: Future[JSONCollection]): Future[String] = {
-    val id = Helpers.generateId
-    for {
-      b <- checkFieldExist(Id, id)
-      value <- if (b) createId else Future.successful(id)
-    } yield value
-  }
-
 }
