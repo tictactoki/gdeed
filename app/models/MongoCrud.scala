@@ -2,46 +2,45 @@ package models
 
 import controllers.CommonController
 import models.commons.CollectionFields._
+import models.commons.Helpers
 import play.api.libs.json.{JsObject, Json}
 import reactivemongo.api.ReadPreference
 import reactivemongo.play.json.collection.JSONCollection
+
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
+import play.modules.reactivemongo.json._
+import reactivemongo.api.commands.WriteResult
 
 /**
   * Created by stephane on 07/04/2016.
   */
-trait MongoCrud { self: CommonController =>
 
-  /**
-    *
-    * @param name
-    * @return
-    */
-  protected def getJSONCollection(name: String): Future[JSONCollection] = self.database.map(_.collection[JSONCollection](name))
+trait MongoCrud[T] {
 
-  protected def simplePredicate[T]() = ???
+  protected def simplePredicate() = ???
 
-  protected def checkIdExist() = ???
+  protected def update(id: String, field: String)(constraint: T => Boolean)(implicit collection: JSONCollection) = ???
 
-  protected def update = ???
+  protected def create(elt: T): Future[WriteResult]
 
-  protected def create = ???
+  protected def delete(id: String)(implicit collection: Future[JSONCollection]): Future[WriteResult] = {
+    collection.flatMap(_.remove(Json.obj(Id -> id)))
+  }
 
-  protected def delete = ???
+  protected def checkFieldExist(fieldName: String, fieldInput: String)(implicit collection: Future[JSONCollection]): Future[Boolean] = {
+    collection.map { collection =>
+      val id = collection.find(Json.obj(fieldName -> fieldInput)).cursor[JsObject](ReadPreference.primary).collect[List]()
+      id != null && id != Nil
+    }
+  }
 
-
-  /**
-    *
-    * @param newId
-    * @param collectionName
-    * @return
-    */
-  /*protected def checkIdExist(newId: String, collectionName: String): Future[Boolean] = {
+  protected def createId(implicit collection: Future[JSONCollection]): Future[String] = {
+    val id = Helpers.generateId
     for {
-      collection <- getJSONCollection(collectionName)
-      id <- collection.find(Json.obj(Id -> newId)).cursor[JsObject](ReadPreference.primary).collect[List]()
-    } yield (id != null || id != Nil)
-  }*/
+      b <- checkFieldExist(Id, id)
+      value <- if (b) createId else Future.successful(id)
+    } yield value
+  }
 
 }
