@@ -1,12 +1,12 @@
 package models.commons
 
-import java.util.UUID
+import reactivemongo.bson.BSONObjectID
 
 /**
   * Created by stephane on 07/04/2016.
   */
 object Helpers {
 
-  def generateId = UUID.randomUUID().toString
+  def generateBsonId = BSONObjectID.generate().stringify
 
 }

@@ -1,8 +1,9 @@
 package controllers
 
 import com.google.inject.{Inject, Singleton}
-import models.{MongoCrud, Part}
-import play.api.mvc.Controller
+import models.Part
+import play.api.libs.json.{JsValue, Json, Writes}
+import play.api.mvc.{Controller, Result}
 import play.modules.reactivemongo.{MongoController, ReactiveMongoApi, ReactiveMongoComponents}
 import reactivemongo.play.json.collection.JSONCollection
 
@@ -20,5 +21,17 @@ abstract class CommonController @Inject ()(val reactiveMongoApi: ReactiveMongoAp
     * @return Future[JSONCollection]
     */
   protected def getJSONCollection(name: String): Future[JSONCollection] = reactiveMongoApi.database.map(_.collection[JSONCollection](name))
+
+  /**
+    *
+    * @param elt
+    * @param status
+    * @param tjs
+    * @tparam T
+    * @return Result as a json format
+    */
+  protected def getJsonResult[T](elt: T, status: Status = Ok)(implicit tjs: Writes[T]): Result = status(Json.toJson(elt))
+
+
 
 }

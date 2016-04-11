@@ -1,18 +1,22 @@
 package controllers
 
 import com.google.inject.{Inject, Singleton}
+import controllers.actions.MongoCrud
 import models.commons.{Helpers, MongoCollectionNames}
 import models.commons.CollectionFields._
-import models.{MongoCrud, SignIn, SignUp, User}
+import models.utils.Errors
+import models.{SignIn, SignUp, User}
 import org.mindrot.jbcrypt.BCrypt
 import play.api.libs.json.{JsError, JsSuccess, Json}
 import play.api.mvc.Action
 import play.modules.reactivemongo.ReactiveMongoApi
 import reactivemongo.play.json.collection.JSONCollection
 import play.modules.reactivemongo.json._
+import reactivemongo.api.{Cursor, ReadPreference}
 import reactivemongo.api.commands.WriteResult
 
 import scala.concurrent.{ExecutionContext, Future}
+import scala.util.Try
 
 /**
   * Created by stephane on 04/04/2016.
@@ -35,19 +39,16 @@ class UserController @Inject()(override val reactiveMongoApi: ReactiveMongoApi)(
           validMail <- checkFieldExist(Email, signIn.email)
           user <- getUserFromUniqueField(Email, signIn.email)
         } yield {
-          //TODO: handle a better exception
-          val validPass = BCrypt.checkpw(signIn.password, user.getOrElse(throw new Exception("User doesn't exist")).password)
+          val password = Try(user.get.password).getOrElse("")
+          val validPass = Try(BCrypt.checkpw(signIn.password, password)).getOrElse(false)
           if (validMail && validPass) user else None
         }
-        wr.map { opt => opt match {
-          case Some(user) => Ok("ok")
-          case None => Ok("ok")
-          }
-        }
+        wr.map { OkOrNot[User](_)(getJsonResult(_).withSession(), BadRequest(Json.toJson(signIn))) }
       }
-      case JsError(error) => ???
+      case JsError(errors) => Future.successful(BadRequest("Could not sign in " + Errors.show(errors)))
     }
   }
+
 
   protected def getUserFromUniqueField(fieldName: String, fieldInput: String) = {
     users.flatMap { collection =>
@@ -57,23 +58,31 @@ class UserController @Inject()(override val reactiveMongoApi: ReactiveMongoApi)(
     }
   }
 
-
-  def checkSignUpData = Action.async(parse.json) { request =>
-    ???
+  protected def checkSignUpData(nickName: String, email: String) = {
+    val fields = Seq((NickName -> nickName),(Email -> email))
   }
+
 
   def signUp = Action.async(parse.json) { request =>
     Json.fromJson[SignUp](request.body) match {
       case JsSuccess(signUp, path) =>
-          val id = Helpers.generateId
+          val id = Helpers.generateBsonId
           val user = User(Some(id), signUp.name, signUp.firstName, signUp.nickName, signUp.email, BCrypt.hashpw(signUp.password, salt))
           create(user).map(_ => Ok("ok"))
-      case JsError(errors) => ???
+      case JsError(errors) => Future.successful(BadRequest("Could not sign up " + Errors.show(errors)))
     }
   }
 
-  protected def getUserFromId(id: String): Future[User] = {
-    ???
+  def getUserFromId(id: String) = Action.async { request =>
+    request.session.get(Id).map { id =>
+      users.flatMap { collection =>
+        collection.find(Json.obj(Id -> id)).cursor[User](ReadPreference.Primary).collect[List]().map { list =>
+          // id is unique so we get the first element
+          val user = list.headOption
+          OkOrNot[User](user)(getJsonResult(_), BadRequest("There are no user with this id"))
+        }
+      }
+    }.getOrElse(Future.successful(Unauthorized("You are not connected")))
   }
 
 }
