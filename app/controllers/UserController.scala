@@ -73,13 +73,13 @@ class UserController @Inject()(override val reactiveMongoApi: ReactiveMongoApi)(
     }
   }
 
-  def getUserFromId(id: String) = Action.async { request =>
+  def getUserFromNickName(nickName: String) = Action.async { request =>
     request.session.get(Id).map { id =>
       users.flatMap { collection =>
-        collection.find(Json.obj(Id -> id)).cursor[User](ReadPreference.Primary).collect[List]().map { list =>
+        collection.find(Json.obj(NickName -> id)).cursor[User](ReadPreference.Primary).collect[List]().map { list =>
           // id is unique so we get the first element
           val user = list.headOption
-          OkOrNot[User](user)(getJsonResult(_), BadRequest("There are no user with this id"))
+          OkOrNot[User](user)(getJsonResult(_), BadRequest("There are no user with this nickname"))
         }
       }
     }.getOrElse(Future.successful(Unauthorized("You are not connected")))
