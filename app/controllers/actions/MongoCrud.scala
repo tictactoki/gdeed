@@ -49,6 +49,16 @@ trait MongoCrud[T] {
     } yield id != null && id != Nil
   }
 
+  protected def checkFieldExist(obj: JsObject)(implicit collection: Future[JSONCollection]): Future[Boolean] = {
+    for {
+      collection <- collection
+      exist <- collection.find(obj).cursor[JsObject](ReadPreference.primary).collect[List]()
+    } yield {
+      println(exist)
+      exist != null && exist != Nil
+    }
+  }
+
   /**
     *
     * @param option

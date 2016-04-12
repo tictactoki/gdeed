@@ -7,7 +7,7 @@ import commons.CollectionFields._
   */
 case class SignIn(email: String, password: String)
 case class SignUp(name: String, firstName: String, nickName: String, email: String, password: String)
-case class User(id: Option[String], name: String, firstName: String, nickName: String, email: String, password: String)
+case class User(_id: Option[String], name: String, firstName: String, nickName: String, email: String, password: String)
 
 object User {
   implicit val userFormat = Json.format[User]

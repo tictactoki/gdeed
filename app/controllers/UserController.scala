@@ -43,7 +43,9 @@ class UserController @Inject()(override val reactiveMongoApi: ReactiveMongoApi)(
           val validPass = Try(BCrypt.checkpw(signIn.password, password)).getOrElse(false)
           if (validMail && validPass) user else None
         }
-        wr.map { OkOrNot[User](_)(getJsonResult(_).withSession(), BadRequest(Json.toJson(signIn))) }
+        wr.map {
+          OkOrNot[User](_)(getJsonResult(_).withSession(), BadRequest(Json.toJson(signIn)))
+        }
       }
       case JsError(errors) => Future.successful(BadRequest("Could not sign in " + Errors.show(errors)))
     }
@@ -58,17 +60,27 @@ class UserController @Inject()(override val reactiveMongoApi: ReactiveMongoApi)(
     }
   }
 
-  protected def checkSignUpData(nickName: String, email: String) = {
-    val fields = Seq((NickName -> nickName),(Email -> email))
+  protected def checkSignUpData(nickName: String, email: String): Future[Boolean] = {
+    val jsObject = Json.obj("$or" -> Json.arr(Json.obj(NickName -> nickName), Json.obj(Email -> email)))
+    checkFieldExist(jsObject)
   }
 
 
   def signUp = Action.async(parse.json) { request =>
     Json.fromJson[SignUp](request.body) match {
       case JsSuccess(signUp, path) =>
-          val id = Helpers.generateBsonId
-          val user = User(Some(id), signUp.name, signUp.firstName, signUp.nickName, signUp.email, BCrypt.hashpw(signUp.password, salt))
-          create(user).map(_ => Ok("ok"))
+        val wr = for {
+          check <- checkSignUpData(signUp.nickName, signUp.email)
+        } yield {
+          if (!check) {
+            val id = Helpers.generateBsonId
+            val user = User(Some(id), signUp.name, signUp.firstName, signUp.nickName, signUp.email, BCrypt.hashpw(signUp.password, salt))
+            create(user)
+            Some(user)
+          }
+          else None
+        }
+        wr.map(OkOrNot[User](_)(getJsonResult(_).withSession(), Conflict(Json.toJson(signUp))))
       case JsError(errors) => Future.successful(BadRequest("Could not sign up " + Errors.show(errors)))
     }
   }
@@ -76,8 +88,8 @@ class UserController @Inject()(override val reactiveMongoApi: ReactiveMongoApi)(
   def getUserFromNickName(nickName: String) = Action.async { request =>
     request.session.get(Id).map { id =>
       users.flatMap { collection =>
-        collection.find(Json.obj(NickName -> id)).cursor[User](ReadPreference.Primary).collect[List]().map { list =>
-          // id is unique so we get the first element
+        collection.find(Json.obj(NickName -> nickName)).cursor[User](ReadPreference.Primary).collect[List]().map { list =>
+          // nickname is unique so we get the first element
           val user = list.headOption
           OkOrNot[User](user)(getJsonResult(_), BadRequest("There are no user with this nickname"))
         }

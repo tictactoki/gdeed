@@ -13,7 +13,7 @@ GET         /message              controllers.AsyncController.message
 POST        /signUp/              controllers.UserController.signUp
 POST        /signIn/              controllers.UserController.signIn
 
-GET         /user/
+GET         /user                  controllers.UserController.getUserFromNickName(nickName: String)
 
 
 # Map static resources from the /public folder to the /assets URL path
