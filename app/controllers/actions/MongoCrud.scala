@@ -53,10 +53,7 @@ trait MongoCrud[T] {
     for {
       collection <- collection
       exist <- collection.find(obj).cursor[JsObject](ReadPreference.primary).collect[List]()
-    } yield {
-      println(exist)
-      exist != null && exist != Nil
-    }
+    } yield exist != null && exist != Nil
   }
 
   /**
