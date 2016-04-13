@@ -7,12 +7,15 @@ import models.commons.CollectionFields._
 import models.utils.Errors
 import models.{SignIn, SignUp, User}
 import org.mindrot.jbcrypt.BCrypt
+import play.api.data.Form
+import play.api.data.Forms._
+import play.api.data.validation.{Invalid, Valid}
 import play.api.libs.json.{JsError, JsSuccess, Json}
 import play.api.mvc.Action
 import play.modules.reactivemongo.ReactiveMongoApi
 import reactivemongo.play.json.collection.JSONCollection
 import play.modules.reactivemongo.json._
-import reactivemongo.api.{Cursor, ReadPreference}
+import reactivemongo.api.ReadPreference
 import reactivemongo.api.commands.WriteResult
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -31,6 +34,16 @@ class UserController @Inject()(override val reactiveMongoApi: ReactiveMongoApi)(
   private final val salt = BCrypt.gensalt()
 
   override protected def create(elt: User): Future[WriteResult] = users.flatMap(_.insert[User](elt))
+
+  private val signUpForm = Form (
+    mapping (
+      Name -> nonEmptyText,
+      FirstName -> nonEmptyText,
+      NickName -> nonEmptyText(3),
+      Email -> email,
+      Password -> nonEmptyText(5)
+    )(SignUp.apply)(SignUp.unapply)
+  )
 
   def signIn = Action.async(parse.json) { request =>
     Json.fromJson[SignIn](request.body) match {
@@ -65,10 +78,13 @@ class UserController @Inject()(override val reactiveMongoApi: ReactiveMongoApi)(
     checkFieldExist(jsObject)
   }
 
-
   def signUp = Action.async(parse.json) { request =>
-    Json.fromJson[SignUp](request.body) match {
-      case JsSuccess(signUp, path) =>
+    signUpForm.bind(request.body).fold(
+      hasErrors => {
+        println(hasErrors)
+        Future.successful(BadRequest(request.body))
+      },
+      signUp => {
         val wr = for {
           check <- checkSignUpData(signUp.nickName, signUp.email)
         } yield {
@@ -81,8 +97,8 @@ class UserController @Inject()(override val reactiveMongoApi: ReactiveMongoApi)(
           else None
         }
         wr.map(OkOrNot[User](_)(getJsonResult(_).withSession(), Conflict(Json.toJson(signUp))))
-      case JsError(errors) => Future.successful(BadRequest("Could not sign up " + Errors.show(errors)))
-    }
+      }
+    )
   }
 
   def getUserFromNickName(nickName: String) = Action.async { request =>
