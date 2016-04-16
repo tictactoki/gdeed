@@ -6,5 +6,8 @@ package models.commons
 object MongoCollectionNames {
 
   final val Users = "users"
+  final val Groups = "groups"
+  final val Events = "events"
+
 
 }

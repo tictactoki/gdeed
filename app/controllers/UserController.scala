@@ -4,12 +4,9 @@ import com.google.inject.{Inject, Singleton}
 import controllers.actions.MongoCrud
 import models.commons.{Helpers, MongoCollectionNames}
 import models.commons.CollectionFields._
-import models.utils.Errors
-import models.{SignIn, SignUp, User}
+import models.{SignIn, User}
 import org.mindrot.jbcrypt.BCrypt
-import play.api.data.Form
-import play.api.data.Forms._
-import play.api.libs.json.{JsError, JsObject, JsSuccess, Json}
+import play.api.libs.json.{Json}
 import play.api.mvc.Action
 import play.modules.reactivemongo.ReactiveMongoApi
 import reactivemongo.play.json.collection.JSONCollection
@@ -27,12 +24,12 @@ import scala.util.Try
 class UserController @Inject()(override val reactiveMongoApi: ReactiveMongoApi)(implicit exec: ExecutionContext)
   extends CommonController(reactiveMongoApi) with MongoCrud[User] {
 
-  implicit lazy val users: Future[JSONCollection] = getJSONCollection(MongoCollectionNames.Users)
+  implicit override lazy val users: Future[JSONCollection] = getJSONCollection(MongoCollectionNames.Users)
 
   // for password
   private final val salt = BCrypt.gensalt()
 
-  override protected def create(elt: User): Future[WriteResult] = users.flatMap(_.insert[User](elt))
+  override protected def insert(elt: User): Future[WriteResult] = users.flatMap(_.insert[User](elt))
 
   def signIn = Action.async(parse.json) { request =>
     SignIn.signInForm.bind(request.body).fold(
@@ -67,8 +64,8 @@ class UserController @Inject()(override val reactiveMongoApi: ReactiveMongoApi)(
   }
 
   def signUp = Action.async(parse.json) { request =>
-    SignUp.signUpForm.bind(request.body).fold(
-      hasErrors => getJsonFormErrorResult[SignUp](hasErrors),
+    User.userForm.bind(request.body).fold(
+      hasErrors => getJsonFormErrorResult[User](hasErrors),
       signUp => {
         val wr = for {
           check <- checkSignUpData(signUp.nickName, signUp.email)
@@ -76,7 +73,7 @@ class UserController @Inject()(override val reactiveMongoApi: ReactiveMongoApi)(
           if (!check) {
             val id = Helpers.generateBsonId
             val user = User(Some(id), signUp.name, signUp.firstName, signUp.nickName, signUp.email, BCrypt.hashpw(signUp.password, salt))
-            create(user)
+            insert(user)
             Some(user)
           }
           else None

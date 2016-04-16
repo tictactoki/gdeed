@@ -12,6 +12,7 @@ libraryDependencies ++= Seq(
   jdbc,
   cache,
   ws,
+  "org.scalaz" %% "scalaz-core" % "7.2.2",
   "org.reactivemongo" %% "play2-reactivemongo" % "0.11.11",
   "org.scalatestplus.play" %% "scalatestplus-play" % "1.5.0-RC1" % Test,
   "org.mindrot" % "jbcrypt" % "0.3m",

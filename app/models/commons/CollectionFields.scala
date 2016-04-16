@@ -11,5 +11,14 @@ object CollectionFields {
   final val Password = "password"
   final val NickName = "nickName"
   final val Email = "email"
+  final val Title = "title"
+  final val Owner = "owner"
+  final val Content = "content"
+  final val Description = "description"
+
+
+  final val Participants = "participants"
+  final val Messages = "messages"
+  final val Answers = "answers"
 
 }

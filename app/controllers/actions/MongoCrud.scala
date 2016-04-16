@@ -1,7 +1,7 @@
 package controllers.actions
 
 import models.commons.CollectionFields._
-import play.api.libs.json.{JsObject, Json}
+import play.api.libs.json._
 import play.api.mvc.{Result, Results}
 import play.modules.reactivemongo.json._
 import reactivemongo.api.ReadPreference
@@ -23,7 +23,7 @@ trait MongoCrud[T] {
 
   protected def update(id: String, field: String)(constraint: T => Boolean)(implicit collection: JSONCollection) = ???
 
-  protected def create(elt: T): Future[WriteResult]
+  protected def insert(elt: T): Future[WriteResult]
 
   /**
     *

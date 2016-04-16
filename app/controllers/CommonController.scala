@@ -1,20 +1,25 @@
 package controllers
 
 import com.google.inject.{Inject, Singleton}
-import models.Part
+import models.{Part, User}
+import models.commons.CollectionFields._
 import play.api.data.Form
 import play.api.libs.json.{JsValue, Json, Writes}
 import play.api.mvc.{Controller, Result}
 import play.modules.reactivemongo.{MongoController, ReactiveMongoApi, ReactiveMongoComponents}
 import reactivemongo.play.json.collection.JSONCollection
+import play.modules.reactivemongo.json._
 
 import scala.concurrent.{ExecutionContext, Future}
+import models.commons.MongoCollectionNames._
 
 /**
   * Created by stephane on 07/04/2016.
   */
 abstract class CommonController @Inject ()(val reactiveMongoApi: ReactiveMongoApi)(implicit exec: ExecutionContext)
   extends Controller with MongoController with ReactiveMongoComponents {
+
+  lazy val users = getJSONCollection(Users)
 
   /**
     *
@@ -44,5 +49,8 @@ abstract class CommonController @Inject ()(val reactiveMongoApi: ReactiveMongoAp
     Future.successful(BadRequest(jsError))
   }
 
+  protected def getUserFromId(id: String): Future[Option[User]] = {
+    users.flatMap(_.find(Json.obj(Id -> id)).cursor[User]().collect[List]().map(l => l.headOption))
+  }
 
 }

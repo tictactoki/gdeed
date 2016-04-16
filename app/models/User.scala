@@ -8,25 +8,21 @@ import play.api.data.Forms._
   * Created by stephane on 04/04/2016.
   */
 case class SignIn(email: String, password: String)
-case class SignUp(name: String, firstName: String, nickName: String, email: String, password: String)
 case class User(_id: Option[String], name: String, firstName: String, nickName: String, email: String, password: String)
 
 object User {
   implicit val userFormat = Json.format[User]
-}
 
-object SignUp {
-  implicit val signUpFormat = Json.format[SignUp]
+  val userMapping = mapping(
+    Id -> optional(nonEmptyText),
+    Name -> nonEmptyText(2),
+    FirstName -> nonEmptyText(2),
+    NickName -> nonEmptyText(3),
+    Email -> email,
+    Password -> nonEmptyText(6)
+  ) (User.apply)(User.unapply)
 
-  lazy val signUpForm = Form (
-    mapping (
-      Name -> nonEmptyText(2),
-      FirstName -> nonEmptyText(2),
-      NickName -> nonEmptyText(3),
-      Email -> email,
-      Password -> nonEmptyText(6)
-    )(SignUp.apply)(SignUp.unapply)
-  )
+  val userForm = Form(userMapping)
 
 }
 
