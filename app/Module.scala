@@ -1,6 +1,7 @@
 import com.google.inject.AbstractModule
 import java.time.Clock
 
+import controllers.{GroupController, UserController}
 import services.{ApplicationTimer, AtomicCounter, Counter}
 
 /**
@@ -21,6 +22,8 @@ class Module extends AbstractModule {
     // Ask Guice to create an instance of ApplicationTimer when the
     // application starts.
     bind(classOf[ApplicationTimer]).asEagerSingleton()
+    bind(classOf[UserController]).asEagerSingleton()
+    bind(classOf[GroupController]).asEagerSingleton()
     // Set AtomicCounter as the implementation for Counter.
     bind(classOf[Counter]).to(classOf[AtomicCounter])
   }

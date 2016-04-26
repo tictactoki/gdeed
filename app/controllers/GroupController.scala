@@ -24,9 +24,9 @@ import scala.util.Try
 class GroupController @Inject()(override val reactiveMongoApi: ReactiveMongoApi)(implicit context: ExecutionContext)
   extends CommonController(reactiveMongoApi) with MongoCrud[Group] {
 
-  implicit lazy val groups = getJSONCollection(Groups)
+  override implicit lazy val mainCollection = getJSONCollection(Groups)
 
-  override protected def insert(elt: Group): Future[WriteResult] = groups.flatMap(_.insert(elt))
+  override protected def insert(elt: Group): Future[WriteResult] = mainCollection.flatMap(_.insert(elt))
 
   def createGroup = Action.async(parse.json) { request =>
     request.session.get(Id).map { id =>
@@ -52,7 +52,7 @@ class GroupController @Inject()(override val reactiveMongoApi: ReactiveMongoApi)
 
   def getOwnGroups = Action.async { request =>
     request.session.get(Id).map { id =>
-      groups.flatMap { collection =>
+      mainCollection.flatMap { collection =>
         collection.find(Json.obj(Id -> id)).cursor[Group]().collect[List]().map { list =>
           Ok(Json.toJson(list))
         }
@@ -61,7 +61,7 @@ class GroupController @Inject()(override val reactiveMongoApi: ReactiveMongoApi)
   }
 
   protected def getGroupFromId(groupId: String) = {
-    groups.flatMap { collection =>
+    mainCollection.flatMap { collection =>
       collection.find(Json.obj(Id -> groupId)).cursor[Group]().collect[List]().map { list =>
         list.headOption
       }

@@ -4,7 +4,7 @@ import com.google.inject.{Inject, Singleton}
 import models.{Part, User}
 import models.commons.CollectionFields._
 import play.api.data.Form
-import play.api.libs.json.{JsValue, Json, Writes}
+import play.api.libs.json.{JsObject, JsValue, Json, Writes}
 import play.api.mvc.{Controller, Result}
 import play.modules.reactivemongo.{MongoController, ReactiveMongoApi, ReactiveMongoComponents}
 import reactivemongo.play.json.collection.JSONCollection
@@ -12,6 +12,8 @@ import play.modules.reactivemongo.json._
 
 import scala.concurrent.{ExecutionContext, Future}
 import models.commons.MongoCollectionNames._
+import reactivemongo.api.ReadPreference
+import reactivemongo.api.commands.WriteResult
 
 /**
   * Created by stephane on 07/04/2016.
@@ -51,6 +53,38 @@ abstract class CommonController @Inject ()(val reactiveMongoApi: ReactiveMongoAp
 
   protected def getUserFromId(id: String): Future[Option[User]] = {
     users.flatMap(_.find(Json.obj(Id -> id)).cursor[User]().collect[List]().map(l => l.headOption))
+  }
+
+
+  /**
+    *
+    * @param id
+    * @param collection
+    * @return delete the data with this @id on this @collection
+    */
+  protected def delete(id: String)(implicit collection: Future[JSONCollection]): Future[WriteResult] = {
+    collection.flatMap(_.remove(Json.obj(Id -> id)))
+  }
+
+  /**
+    *
+    * @param fieldName
+    * @param fieldInput
+    * @param collection
+    * @return true if @fieldInput with the @fieldName exist on this collection
+    */
+  protected def checkFieldExist(fieldName: String, fieldInput: String)(implicit collection: Future[JSONCollection]): Future[Boolean] = {
+    for {
+      collection <- collection
+      id <- collection.find(Json.obj(fieldName -> fieldInput)).cursor[JsObject](ReadPreference.primary).collect[List]()
+    } yield id != null && id != Nil
+  }
+
+  protected def checkFieldExist(obj: JsObject)(implicit collection: Future[JSONCollection]): Future[Boolean] = {
+    for {
+      collection <- collection
+      exist <- collection.find(obj).cursor[JsObject](ReadPreference.primary).collect[List]()
+    } yield exist != null && exist != Nil
   }
 
 }

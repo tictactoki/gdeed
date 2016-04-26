@@ -19,42 +19,14 @@ import scala.concurrent.Future
 
 trait MongoCrud[T] {
 
+  implicit val mainCollection: Future[JSONCollection]
+
   protected def simplePredicate() = ???
 
   protected def update(id: String, field: String)(constraint: T => Boolean)(implicit collection: JSONCollection) = ???
 
   protected def insert(elt: T): Future[WriteResult]
 
-  /**
-    *
-    * @param id
-    * @param collection
-    * @return delete the data with this @id on this @collection
-    */
-  protected def delete(id: String)(implicit collection: Future[JSONCollection]): Future[WriteResult] = {
-    collection.flatMap(_.remove(Json.obj(Id -> id)))
-  }
-
-  /**
-    *
-    * @param fieldName
-    * @param fieldInput
-    * @param collection
-    * @return true if @fieldInput with the @fieldName exist on this collection
-    */
-  protected def checkFieldExist(fieldName: String, fieldInput: String)(implicit collection: Future[JSONCollection]): Future[Boolean] = {
-    for {
-      collection <- collection
-      id <- collection.find(Json.obj(fieldName -> fieldInput)).cursor[JsObject](ReadPreference.primary).collect[List]()
-    } yield id != null && id != Nil
-  }
-
-  protected def checkFieldExist(obj: JsObject)(implicit collection: Future[JSONCollection]): Future[Boolean] = {
-    for {
-      collection <- collection
-      exist <- collection.find(obj).cursor[JsObject](ReadPreference.primary).collect[List]()
-    } yield exist != null && exist != Nil
-  }
 
   /**
     *

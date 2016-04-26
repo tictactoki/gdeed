@@ -6,7 +6,8 @@ import models.commons.{Helpers, MongoCollectionNames}
 import models.commons.CollectionFields._
 import models.{SignIn, User}
 import org.mindrot.jbcrypt.BCrypt
-import play.api.libs.json.{Json}
+import play.api.data.Form
+import play.api.libs.json.Json
 import play.api.mvc.Action
 import play.modules.reactivemongo.ReactiveMongoApi
 import reactivemongo.play.json.collection.JSONCollection
@@ -24,15 +25,17 @@ import scala.util.Try
 class UserController @Inject()(override val reactiveMongoApi: ReactiveMongoApi)(implicit exec: ExecutionContext)
   extends CommonController(reactiveMongoApi) with MongoCrud[User] {
 
-  implicit override lazy val users: Future[JSONCollection] = getJSONCollection(MongoCollectionNames.Users)
+  implicit override lazy val mainCollection: Future[JSONCollection] = getJSONCollection(MongoCollectionNames.Users)
 
   // for password
   private final val salt = BCrypt.gensalt()
 
-  override protected def insert(elt: User): Future[WriteResult] = users.flatMap(_.insert[User](elt))
+  override protected def insert(elt: User): Future[WriteResult] = mainCollection.flatMap(_.insert[User](elt))
 
-  def signIn = Action.async(parse.json) { request =>
-    SignIn.signInForm.bind(request.body).fold(
+  def index = Action { Ok(views.html.login()) }
+
+  def signIn = Action.async { implicit request =>
+    SignIn.signInForm.bindFromRequest().fold(
       hasErrors => getJsonFormErrorResult[SignIn](hasErrors),
       signIn => {
         val wr = for {
@@ -44,14 +47,15 @@ class UserController @Inject()(override val reactiveMongoApi: ReactiveMongoApi)(
           if (validMail && validPass) user else None
         }
         wr.map {
-          OkOrNot[User](_)(getJsonResult(_).withSession(), BadRequest(Json.toJson(signIn)))
+          OkOrNot[User](_)(getJsonResult(_).withSession(), BadRequest(Json.toJson(signIn.copy(password = ""))))
         }
       }
     )
   }
 
+
   protected def getUserFromUniqueField(fieldName: String, fieldInput: String) = {
-    users.flatMap { collection =>
+    mainCollection.flatMap { collection =>
       collection.find(Json.obj(fieldName -> fieldInput)).cursor[User]().collect[List]().map { users =>
         if (users != null && users != Nil && users.size == 1) users.headOption else None
       }
@@ -63,8 +67,12 @@ class UserController @Inject()(override val reactiveMongoApi: ReactiveMongoApi)(
     checkFieldExist(jsObject)
   }
 
-  def signUp = Action.async(parse.json) { request =>
-    User.userForm.bind(request.body).fold(
+  def signUp = Action.async { implicit request =>
+    checkSignUp(User.userForm.bindFromRequest())
+  }
+
+  protected def checkSignUp(userForm: Form[User]) = {
+    userForm.fold(
       hasErrors => getJsonFormErrorResult[User](hasErrors),
       signUp => {
         val wr = for {
@@ -78,9 +86,17 @@ class UserController @Inject()(override val reactiveMongoApi: ReactiveMongoApi)(
           }
           else None
         }
-        wr.map(OkOrNot[User](_)(getJsonResult(_).withSession(), Conflict(Json.toJson(signUp))))
+        wr.map(OkOrNot[User](_)(getJsonResult(_).withSession(), Conflict(Json.toJson(signUp.copy(password = "")))))
       }
     )
+  }
+
+  def getUsers = Action.async { request =>
+    users.flatMap{ collection =>
+      collection.find(Json.obj()).cursor[User]().collect[List]().map { list =>
+        Ok(Json.toJson(list))
+      }
+    }
   }
 
   def getUserFromNickName(nickName: String) = Action.async { request =>

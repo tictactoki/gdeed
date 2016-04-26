@@ -1,0 +1,48 @@
+{
+  "name": "assets",
+  "version": "0.0.0",
+  "authors": [
+    "Stéphane Wong <stephane.wong@density-tech.com>"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery.event.drag-new": "*",
+    "jquery": "~2.1.4",
+    "jquery-ui": "~1.11.4",
+    "jquery-ui.accordion.multiple": "asleepwalker/jquery-ui.accordion.multiple",
+    "jquery.splitter": "*",
+    "jquery-validation": "jzaefferer/jquery-validation",
+    "jstree": "vakata/jstree",
+    "mmenu": "BeSite/jQuery.mmenu",
+    "requirejs-jquery": "~0.25.0",
+    "jquery-ui-sortable": "*",
+    "Chart.js": "~1.0.2",
+    "stack-generator": "~1.0.3",
+    "stacktrace-js": "~0.6.4",
+    "stackframe": "~0.2.2",
+    "requirejs": "~2.1.18",
+    "handsontable": "~0.14.1",
+    "x-slickgrid": "tictactoki/X-SlickGrid#master",
+    "underscore": "~1.8.3",
+    "slickgrid-spreadsheet-plugins": "danny-sg/slickgrid-spreadsheet-plugins",
+    "bootstrap": "~3.3.5",
+    "At.js": "~1.3.2",
+    "select2": "~4.0.0",
+    "golden-layout": "hoxton-one/golden-layout",
+    "highcharts": "highslide-software/highcharts.com",
+    "highstock": "highslide-software/highstock-release",
+    "react": "*",
+    "react-router": "*",
+    "socket.io-client": "*"
+  },
+  "resolutions": {
+    "jquery": "~2.1.4"
+  }
+}
