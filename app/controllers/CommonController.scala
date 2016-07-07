@@ -74,10 +74,7 @@ abstract class CommonController @Inject ()(val reactiveMongoApi: ReactiveMongoAp
     * @return true if @fieldInput with the @fieldName exist on this collection
     */
   protected def checkFieldExist(fieldName: String, fieldInput: String)(implicit collection: Future[JSONCollection]): Future[Boolean] = {
-    for {
-      collection <- collection
-      id <- collection.find(Json.obj(fieldName -> fieldInput)).cursor[JsObject](ReadPreference.primary).collect[List]()
-    } yield id != null && id != Nil
+    checkFieldExist(Json.obj(fieldName -> fieldInput))
   }
 
   protected def checkFieldExist(obj: JsObject)(implicit collection: Future[JSONCollection]): Future[Boolean] = {
