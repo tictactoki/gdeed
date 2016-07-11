@@ -1,13 +1,19 @@
 /**
  * Created by stephane on 26/04/2016.
  */
+/*
+var signIn = {
+    email: "",
+    password: ""
+};
+
 
 var Login = React.createClass({
 
     getInitialState: function () {
         return {
-            email: "",
-            password: ""
+            email: this.props.email || "",
+            password: this.props.password || "",
         };
     },
 
@@ -68,4 +74,8 @@ $(document).ready(function () {
 
     ReactDOM.render(<Login/>, document.getElementById("content"));
 
-});
+});*/
+
+function test(data) {
+  console.log(data.password);
+}

@@ -51,6 +51,12 @@ abstract class CommonController @Inject ()(val reactiveMongoApi: ReactiveMongoAp
     Future.successful(BadRequest(jsError))
   }
 
+  protected def getSeqFromError[T](form: Form[T]) = {
+   form.errors.map { fe =>
+     (fe.key -> fe.message)
+   }
+  }
+
   protected def getUserFromId(id: String): Future[Option[User]] = {
     users.flatMap(_.find(Json.obj(Id -> id)).cursor[User]().collect[List]().map(l => l.headOption))
   }

@@ -32,11 +32,12 @@ class UserController @Inject()(override val reactiveMongoApi: ReactiveMongoApi)(
 
   override protected def insert(elt: User): Future[WriteResult] = mainCollection.flatMap(_.insert[User](elt))
 
-  def index = Action { Ok(views.html.login()) }
+  def index = Action { Ok(views.html.login(None)) }
 
   def signIn = Action.async { implicit request =>
     SignIn.signInForm.bindFromRequest().fold(
-      hasErrors => getJsonFormErrorResult[SignIn](hasErrors),
+      hasErrors => Future.successful(BadRequest(views.html.login(Option(getSeqFromError(hasErrors))))),
+        //getJsonFormErrorResult[SignIn](hasErrors),
       signIn => {
         val wr = for {
           validMail <- checkFieldExist(Email, signIn.email)
