@@ -2,7 +2,7 @@ package controllers
 
 import com.google.inject.{Inject, Singleton}
 import controllers.actions.MongoCrud
-import models.Group
+import models.{User, Group}
 import play.modules.reactivemongo.ReactiveMongoApi
 import reactivemongo.api.commands.WriteResult
 import models.commons.MongoCollectionNames._
@@ -67,6 +67,29 @@ class GroupController @Inject()(override val reactiveMongoApi: ReactiveMongoApi)
       }
     }
   }
+
+  //val participantsQuery = (id: String) => Json.obj("$in" -> Json.arr(Json.obj(Participants -> id)))
+  val getUserParticipants =  (set: Set[String]) => users.flatMap { collection =>
+    val query = Json.obj(Id -> Json.obj("$in" -> Json.arr(Json.toJson(set.toArray))))
+    collection.find(query).cursor[User]().collect[List]()
+  }
+
+  def getUserParticipant(group: Group) = Action.async { implicit request =>
+    getUserParticipants(group.participants).map { l => Ok(Json.toJson(l)) }
+  }
+
+  protected def getGroupUserParticiple(id: String) = {
+    val query = Json.obj("$in" -> Json.arr(Json.obj(Participants -> id)))
+    mainCollection.flatMap { _.find(query).cursor[Group]().collect[List]() }
+  }
+
+
+
+  /*protected def getGroupUserParticiple(user: models.User) = {
+    mainCollection.map { collection =>
+      val query = Json.obj("$in" -> Json.arr(Json.obj(Participants -> user._id.getOrElse(""))))
+    }
+  }*/
 
   /*def addUserOnGroup(groupId: String, userId: String) = {
     val jsObj = Json.obj(Id -> groupId, Owner -> userId)

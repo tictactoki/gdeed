@@ -47,8 +47,8 @@ class UserController @Inject()(override val reactiveMongoApi: ReactiveMongoApi)(
           val validPass = Try(BCrypt.checkpw(signIn.password, password)).getOrElse(false)
           if (validMail && validPass) user else None
         }
-        wr.map {
-          OkOrNot[User](_)(getJsonResult(_).withSession(), BadRequest(Json.toJson(signIn.copy(password = ""))))
+        wr.map { e =>
+          OkOrNot[User](e)(getJsonResult(_).withSession(Id -> e.get._id.get), BadRequest(Json.toJson(signIn.copy(password = ""))))
         }
       }
     )
