@@ -8,7 +8,7 @@ import play.api.data.Forms._
   * Created by stephane on 14/04/2016.
   */
 case class Group(_id: Option[String], owner: Option[User], title: String, description: String,
-                 participants: Set[User] = Set(), messages: Set[Message] = Set()) {
+                 participants: Set[String] = Set(), messages: Set[String] = Set()) {
 
   /**
     *
@@ -28,8 +28,8 @@ object Group {
       Owner -> optional(User.userMapping),
       Title -> nonEmptyText(2),
       Description -> text,
-      Participants -> set(User.userMapping),
-      Messages -> set(Message.messageMapping)
+      Participants -> set(text),
+      Messages -> set(text)
     )(Group.apply)(Group.unapply)
   )
 
