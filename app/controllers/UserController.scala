@@ -2,13 +2,14 @@ package controllers
 
 import com.google.inject.{Inject, Singleton}
 import controllers.actions.MongoCrud
+import controllers.interfaces.UserControllerInterface
 import models.commons.{Helpers, MongoCollectionNames}
 import models.commons.CollectionFields._
 import models.{SignIn, User}
 import org.mindrot.jbcrypt.BCrypt
 import play.api.data.Form
 import play.api.libs.json.Json
-import play.api.mvc.Action
+import play.api.mvc.{Session, Action}
 import play.modules.reactivemongo.ReactiveMongoApi
 import reactivemongo.play.json.collection.JSONCollection
 import play.modules.reactivemongo.json._
@@ -23,7 +24,7 @@ import scala.util.Try
   */
 @Singleton
 class UserController @Inject()(override val reactiveMongoApi: ReactiveMongoApi)(implicit exec: ExecutionContext)
-  extends CommonController(reactiveMongoApi) with MongoCrud[User] {
+  extends CommonController(reactiveMongoApi) with MongoCrud[User] with UserControllerInterface {
 
   implicit override lazy val mainCollection: Future[JSONCollection] = getJSONCollection(MongoCollectionNames.Users)
 
@@ -47,33 +48,15 @@ class UserController @Inject()(override val reactiveMongoApi: ReactiveMongoApi)(
           val validPass = Try(BCrypt.checkpw(signIn.password, password)).getOrElse(false)
           if (validMail && validPass) user else None
         }
-        wr.map { e =>
-          OkOrNot[User](e)(getJsonResult(_).withSession(Id -> e.get._id.get), BadRequest(Json.toJson(signIn.copy(password = ""))))
+        wr.map { u =>
+          OkOrNot[User](u)(getJsonResult(_).withSession(createSession(u)), BadRequest(Json.toJson(signIn.copy(password = ""))))
         }
       }
     )
   }
 
-
-  protected def getUserFromUniqueField(fieldName: String, fieldInput: String) = {
-    mainCollection.flatMap { collection =>
-      collection.find(Json.obj(fieldName -> fieldInput)).cursor[User]().collect[List]().map { users =>
-        if (users != null && users != Nil && users.size == 1) users.headOption else None
-      }
-    }
-  }
-
-  protected def checkSignUpData(nickName: String, email: String): Future[Boolean] = {
-    val jsObject = Json.obj("$or" -> Json.arr(Json.obj(NickName -> nickName), Json.obj(Email -> email)))
-    checkFieldExist(jsObject)
-  }
-
   def signUp = Action.async { implicit request =>
-    checkSignUp(User.userForm.bindFromRequest())
-  }
-
-  protected def checkSignUp(userForm: Form[User]) = {
-    userForm.fold(
+    User.userForm.bindFromRequest().fold(
       hasErrors => getJsonFormErrorResult[User](hasErrors),
       signUp => {
         val wr = for {

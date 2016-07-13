@@ -2,6 +2,7 @@ package controllers
 
 import com.google.inject.{Inject, Singleton}
 import controllers.actions.MongoCrud
+import controllers.interfaces.GroupControllerInterface
 import models.{User, Group}
 import play.modules.reactivemongo.ReactiveMongoApi
 import reactivemongo.api.commands.WriteResult
@@ -22,7 +23,7 @@ import scala.util.Try
   */
 @Singleton
 class GroupController @Inject()(override val reactiveMongoApi: ReactiveMongoApi)(implicit context: ExecutionContext)
-  extends CommonController(reactiveMongoApi) with MongoCrud[Group] {
+  extends CommonController(reactiveMongoApi) with MongoCrud[Group] with GroupControllerInterface {
 
   override implicit lazy val mainCollection = getJSONCollection(Groups)
 
@@ -60,36 +61,14 @@ class GroupController @Inject()(override val reactiveMongoApi: ReactiveMongoApi)
     }.getOrElse(Future.successful(Unauthorized("You are not connected")))
   }
 
-  protected def getGroupFromId(groupId: String) = {
-    mainCollection.flatMap { collection =>
-      collection.find(Json.obj(Id -> groupId)).cursor[Group]().collect[List]().map { list =>
-        list.headOption
-      }
+  def index = Action { Ok(views.html.group(None)) }
+
+  def getUserParticipant(id: String) = Action.async { implicit request =>
+     getGroupFromId(id).flatMap { g =>
+        getUserParticipants(g.get.participants).map { l => Ok(Json.toJson(l)) }
     }
   }
 
-  //val participantsQuery = (id: String) => Json.obj("$in" -> Json.arr(Json.obj(Participants -> id)))
-  val getUserParticipants =  (set: Set[String]) => users.flatMap { collection =>
-    val query = Json.obj(Id -> Json.obj("$in" -> Json.arr(Json.toJson(set.toArray))))
-    collection.find(query).cursor[User]().collect[List]()
-  }
-
-  def getUserParticipant(group: Group) = Action.async { implicit request =>
-    getUserParticipants(group.participants).map { l => Ok(Json.toJson(l)) }
-  }
-
-  protected def getGroupUserParticiple(id: String) = {
-    val query = Json.obj("$in" -> Json.arr(Json.obj(Participants -> id)))
-    mainCollection.flatMap { _.find(query).cursor[Group]().collect[List]() }
-  }
-
-
-
-  /*protected def getGroupUserParticiple(user: models.User) = {
-    mainCollection.map { collection =>
-      val query = Json.obj("$in" -> Json.arr(Json.obj(Participants -> user._id.getOrElse(""))))
-    }
-  }*/
 
   /*def addUserOnGroup(groupId: String, userId: String) = {
     val jsObj = Json.obj(Id -> groupId, Owner -> userId)
