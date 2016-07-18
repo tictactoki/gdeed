@@ -29,7 +29,7 @@ class GroupController @Inject()(override val reactiveMongoApi: ReactiveMongoApi)
 
   override protected def insert(elt: Group): Future[WriteResult] = mainCollection.flatMap(_.insert(elt))
 
-  def createGroup = Action.async(parse.json) { request =>
+  def createGroup = Action.async(parse.json) { implicit request =>
     request.session.get(Id).map { id =>
       Group.groupForm.bind(request.body).fold(
         hasErrors => getJsonFormErrorResult[Group](hasErrors),
@@ -51,7 +51,7 @@ class GroupController @Inject()(override val reactiveMongoApi: ReactiveMongoApi)
     }.getOrElse(Future.successful(Unauthorized("You are not connected")))
   }
 
-  def getOwnGroups = Action.async { request =>
+  def getOwnGroups = Action.async { implicit request =>
     request.session.get(Id).map { id =>
       mainCollection.flatMap { collection =>
         collection.find(Json.obj(Id -> id)).cursor[Group]().collect[List]().map { list =>
@@ -69,6 +69,39 @@ class GroupController @Inject()(override val reactiveMongoApi: ReactiveMongoApi)
     }
   }
 
+  protected def getUserParticipants (set: Set[String])(implicit context: ExecutionContext) = {
+    users.flatMap { collection =>
+      val query = Json.obj(Id -> Json.obj("$in" -> Json.toJson(set)))
+      collection.find(query).cursor[User]().collect[List]()
+    }
+  }
+
+  protected def getGroupUserParticiple(id: String)(implicit context: ExecutionContext) = {
+    val query = Json.obj("$in" -> Json.arr(Json.obj(Participants -> id)))
+    mainCollection.flatMap { _.find(query).cursor[Group]().collect[List]() }
+  }
+
+  protected def getGroupFromId(groupId: String)(implicit context: ExecutionContext) = {
+    mainCollection.flatMap { collection =>
+      collection.find(Json.obj(Id -> groupId)).cursor[Group]().collect[List]().map { list =>
+        list.headOption
+      }
+    }
+  }
+
+  protected def addParticipant(group: Group, uid: String)(implicit context: ExecutionContext) = {
+    val modifier = Json.obj("$set" -> Json.obj(Participants -> (group.participants + uid)))
+    mainCollection.flatMap { collection =>
+      collection.update(Json.obj(Id -> group._id.get),modifier)
+    }
+  }
+
+  protected def deleteParticipant(group: Group, uid: String)(implicit context: ExecutionContext) = {
+    val modifier = Json.obj("$set" -> Json.obj(Participants -> (group.participants - uid)))
+    mainCollection.flatMap { collection =>
+      collection.update(Json.obj(Id -> group._id.get),modifier)
+    }
+  }
 
   /*def addUserOnGroup(groupId: String, userId: String) = {
     val jsObj = Json.obj(Id -> groupId, Owner -> userId)
