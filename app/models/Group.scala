@@ -20,6 +20,7 @@ case class Group(_id: Option[String], owner: Option[User], title: String, descri
 }
 
 object Group {
+
   implicit val groupFormat = Json.format[Group]
 
   val groupForm = Form(

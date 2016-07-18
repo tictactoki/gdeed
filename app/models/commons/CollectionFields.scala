@@ -21,4 +21,7 @@ object CollectionFields {
   final val Messages = "messages"
   final val Answers = "answers"
 
+  final val StartDate = "startDate"
+  final val EndDate = "endDate"
+
 }
