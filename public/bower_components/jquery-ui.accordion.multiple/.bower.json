@@ -1,0 +1,42 @@
+{
+  "name": "jquery-ui.accordion.multiple",
+  "version": "1.0.0",
+  "homepage": "https://github.com/asleepwalker/jquery-ui.accordion.multiple",
+  "authors": [
+    "Artyom 'Sleepwalker' Fedosov <mail@asleepwalker.ru>"
+  ],
+  "description": "jQuery UI plugin for Accordion Widget that allows open few panels at the same time",
+  "main": "lib/jquery-ui.accordion.multiple.js",
+  "keywords": [
+    "jquery",
+    "jquery-ui",
+    "accordion",
+    "panels",
+    "tabs",
+    "multiple",
+    "ui",
+    "content",
+    "widget"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery": ">=1.6",
+    "jquery-ui": ">=1.0"
+  },
+  "_release": "1.0.0",
+  "_resolution": {
+    "type": "version",
+    "tag": "1.0.0",
+    "commit": "75efbae761ff4e2f187e9f50c7906c343568d578"
+  },
+  "_source": "git://github.com/asleepwalker/jquery-ui.accordion.multiple.git",
+  "_target": "*",
+  "_originalSource": "asleepwalker/jquery-ui.accordion.multiple"
+}

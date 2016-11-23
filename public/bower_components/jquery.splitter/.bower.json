@@ -1,0 +1,19 @@
+{
+  "name": "jquery.splitter",
+  "version": "0.23.0",
+  "main": [
+    "./js/jquery.splitter.js"
+  ],
+  "description": "jQuery Splitter is plugin that split your content with movable splitter between them",
+  "license": "LGPL-3.0",
+  "homepage": "https://github.com/jcubic/jquery.splitter",
+  "_release": "0.23.0",
+  "_resolution": {
+    "type": "version",
+    "tag": "0.23.0",
+    "commit": "76780a2bc79b10cc61757950bc1f8073e9c0a110"
+  },
+  "_source": "https://github.com/jcubic/jquery.splitter.git",
+  "_target": "*",
+  "_originalSource": "jquery.splitter"
+}

@@ -9,6 +9,7 @@ import reactivemongo.api.commands.WriteResult
 import reactivemongo.play.json.collection.JSONCollection
 import models.commons.MongoCollectionNames._
 import scala.concurrent.{Future, ExecutionContext}
+import models.commons.CollectionFields._
 
 /**
   * Created by stephane on 18/07/2016.
@@ -22,7 +23,9 @@ class EventController @Inject()(override val reactiveMongoApi: ReactiveMongoApi)
   override protected def insert(elt: Event): Future[WriteResult] = mainCollection.flatMap(_.insert(elt))
 
   def createEvent = Action.async { implicit request =>
+    request.session.get(Id).map { id =>
 
+    }
     ???
   }
 

@@ -76,11 +76,17 @@ class UserController @Inject()(override val reactiveMongoApi: ReactiveMongoApi)(
   }
 
   def getUsers = Action.async { request =>
-    users.flatMap{ collection =>
+    for {
+      collection <- users
+      list <- collection.find(Json.obj()).cursor[User]().collect[List]()
+    } yield {
+      Ok(Json.toJson(list))
+    }
+    /*users.flatMap{ collection =>
       collection.find(Json.obj()).cursor[User]().collect[List]().map { list =>
         Ok(Json.toJson(list))
       }
-    }
+    }*/
   }
 
   def getUserFromNickName(nickName: String) = Action.async { request =>

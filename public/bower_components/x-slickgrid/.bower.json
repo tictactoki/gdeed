@@ -1,0 +1,52 @@
+{
+  "name": "X-SlickGrid",
+  "main": [
+    "slick.core.js",
+    "slick.grid.js",
+    "slick.grid.css"
+  ],
+  "keywords": [
+    "SlickGrid",
+    "grid",
+    "frozen",
+    "fix",
+    "columns",
+    "spreadsheet",
+    "nested"
+  ],
+  "ignore": [
+    ".jshintrc",
+    "**/*.txt",
+    "*.json",
+    "*.markdown",
+    "*.txt",
+    ".*",
+    "!LICENSE.txt",
+    "Gruntfile.js",
+    "examples",
+    "tests",
+    "lib"
+  ],
+  "dependencies": {
+    "jquery": "~1.7.0",
+    "jquery-ui": "~1.9.0",
+    "jquery.event": "threedubmedia/jquery.threedubmedia#2.2",
+    "jquery-mousewheel": "jquery/jquery-mousewheel#3.0.6",
+    "jquery-simulate": "1.0.0",
+    "jquery.sparkline": "gwatts/jquery.sparkline#2.1.2",
+    "jquery-jsonp": "jaubourg/jquery-jsonp#2.4.0",
+    "handlebars": "~2.0.0",
+    "qunit": "~1.0.0"
+  },
+  "devDependencies": {},
+  "homepage": "https://github.com/tictactoki/X-SlickGrid",
+  "_release": "161a22e3e3",
+  "_resolution": {
+    "type": "branch",
+    "branch": "master",
+    "commit": "161a22e3e3a125035e836ef2cd2af4e1a511e2d0"
+  },
+  "_source": "git://github.com/tictactoki/X-SlickGrid.git",
+  "_target": "master",
+  "_originalSource": "tictactoki/X-SlickGrid"
+}

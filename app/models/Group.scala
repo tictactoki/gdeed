@@ -8,7 +8,7 @@ import play.api.data.Forms._
   * Created by stephane on 14/04/2016.
   */
 case class Group(_id: Option[String], owner: Option[User], title: String, description: String,
-                 participants: Set[String] = Set(), messages: Set[String] = Set()) {
+                 participants: Set[String] = Set.empty, messages: Set[String] = Set.empty) {
 
   /**
     *

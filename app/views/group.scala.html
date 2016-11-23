@@ -1,0 +1,30 @@
+@(form: Option[Seq[(String,String)]])
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Sign In</title>
+        <link rel="stylesheet" media="screen" href="@routes.Assets.versioned("stylesheets/main.css")">
+        <link rel="shortcut icon" type="image/png" href="@routes.Assets.versioned("images/favicon.png")">
+
+    </head>
+    <body>
+
+        <div id="content"></div>
+        <form action='@routes.GroupController.createGroup()' method="POST">
+            <input id="email" refs="email" name="email" type="email" placeholder="Email"required/>
+            <input id="password" refs="password" name="password" type="password" placeholder="Password"/>
+            <input id="email" refs="email" name="email" type="email" placeholder="Email"required/>
+            <input id="password" refs="password" name="password" type="password" placeholder="Password"/>
+            <input type="submit" value="OK"/>
+        </form>
+
+
+        <script type='text/javascript' src='@routes.Assets.versioned("bower_components/react/react.js")'></script>
+        <script type='text/javascript' src='@routes.Assets.versioned("bower_components/react/react-dom.js")'></script>
+        <script type='text/javascript' src='@routes.Assets.versioned("bower_components/jquery/dist/jquery.js")'></script>
+        <script type='text/javascript' src='@routes.Assets.versioned("javascripts/login.jsx")'></script>
+
+    </body>
+</html>
+

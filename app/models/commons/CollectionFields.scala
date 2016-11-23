@@ -15,7 +15,8 @@ object CollectionFields {
   final val Owner = "owner"
   final val Content = "content"
   final val Description = "description"
-
+  final val IsOpen = "isOpen"
+  final val EventType = "eventType"
 
   final val Participants = "participants"
   final val Messages = "messages"
@@ -23,5 +24,20 @@ object CollectionFields {
 
   final val StartDate = "startDate"
   final val EndDate = "endDate"
+
+
+  final val Question = "question"
+  final val Value = "value"
+  final val Choices = "choices"
+  final val Questions = "questions"
+}
+
+
+object CollectionEnumFieldValues {
+
+  object EventTypeValue {
+    final val LostFoundEventValue = "lostFoundEvent"
+    final val HelpEventValue = "helpEvent"
+  }
 
 }
