@@ -4,7 +4,7 @@ import java.util.Date
 
 import models.commons.CollectionFields
 import play.api.data.Forms._
-import play.api.data.Form
+import play.api.data.{Mapping, Form}
 import play.api.libs.json._
 import commons.CollectionFields._
 import commons.{CollectionFields => CF}
@@ -39,6 +39,8 @@ case object Help extends EventType
 
 object Event {
 
+  import Question._
+
   implicit val eventReads: Reads[Event] = new Reads[Event]{
     override def reads(json: JsValue): JsResult[Event] = json match {
       case obj: JSONObject =>
@@ -57,10 +59,59 @@ object Event {
     }
   }
 
+  def apply(id: Option[String], owner: Option[User], eventType: String,
+            title: String, description: String,
+            participants: Option[Set[String]], isOpen: Boolean,
+            creationDate: Date, endDate: Date,
+            questions: Option[Set[Question]]): Event = {
+    println(eventType)
+    eventType match {
+      case "LostFound" => LostFoundEvent(id,owner,title,description, isOpen,creationDate,endDate,questions.getOrElse(Set.empty))
+      case "Help" => HelpEvent(id,owner,title,description,participants.getOrElse(Set.empty),isOpen,creationDate,endDate)
+    }
+  }
+
+  val eventForm = Form(
+    tuple(
+      Id -> optional(nonEmptyText),
+      Owner -> optional(userMapping),
+      CF.EventType -> text,
+      Title -> text(2),
+      Description -> text,
+      Participants -> optional(set(text)),
+      IsOpen -> boolean,
+      StartDate -> date,
+      EndDate -> date,
+      Questions -> optional(set(questionMapping))
+    )
+    //eventMapping
+  )
+
+  val eventMapping = mapping(
+    Id -> optional(nonEmptyText),
+    Owner -> optional(userMapping),
+    CF.EventType -> text,
+    Title -> text(2),
+    Description -> text,
+    Participants -> optional(set(text)),
+    IsOpen -> checked(IsOpen),
+    StartDate -> date,
+    EndDate -> date,
+    Questions -> optional(set(questionMapping))
+  )(Event.apply){ event =>
+    event match {
+      case l: LostFoundEvent =>
+        Some(l._id, l.owner, l.eventType, l.title, l.description, Option.empty[Set[String]], l.isOpen, l.creationDate,
+          l.endDate, Option(l.questions))
+      case h: HelpEvent =>
+        Some(h._id, h.owner, h.eventType, h.title, h.description, Option(h.participants), h.isOpen, h.creationDate,
+          h.endDate, Option.empty[Set[Question]])
+    }
+  }
 }
 
 
-sealed abstract class Event(val _id: Option[String], val owner: User, val eventType: String, val title: String, val description: String, val isOpen: Boolean = true, val creationDate: Date = new Date, val endDate: Date)
+sealed abstract class Event(val _id: Option[String], val owner: Option[User], val eventType: String, val title: String, val description: String, val isOpen: Boolean = true, val creationDate: Date = new Date, val endDate: Date)
 
 case class Choice(_id: Option[String], name: String, value: Boolean)
 
@@ -94,7 +145,7 @@ object Question {
 }
 
 case class LostFoundEvent(override val _id: Option[String],
-                          override val owner: User,
+                          override val owner: Option[User],
                           override val title: String,
                           override val description: String,
                           override val isOpen: Boolean,
@@ -111,10 +162,10 @@ object LostFoundEvent {
 
   val lostForm = mapping(
     Id -> optional(nonEmptyText),
-    Owner -> userMapping,
+    Owner -> optional(userMapping),
     Title -> text(2),
     Description -> text,
-    IsOpen -> boolean,
+    IsOpen -> checked(IsOpen),
     StartDate -> date,
     EndDate -> date,
     Questions -> set(questionMapping)
@@ -133,11 +184,11 @@ object HelpEvent {
 
   val helpMapping = mapping(
     Id -> optional(nonEmptyText),
-    Owner -> userMapping,
+    Owner -> optional(userMapping),
     Title -> text(2),
     Description -> text,
     Participants -> set(text),
-    IsOpen -> boolean,
+    IsOpen -> checked(IsOpen),
     StartDate -> date,
     EndDate -> date
   )(HelpEvent.apply)(HelpEvent.unapply)
@@ -145,7 +196,7 @@ object HelpEvent {
 }
 
 case class HelpEvent(override val _id: Option[String],
-                     override val owner: User,
+                     override val owner: Option[User],
                      override val title: String,
                      override val description: String,
                      participants: Set[String] = Set.empty,

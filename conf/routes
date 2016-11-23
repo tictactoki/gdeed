@@ -23,6 +23,12 @@ POST        /group/create         controllers.GroupController.createGroup
 GET         /groups               controllers.GroupController.getOwnGroups
 
 
+POST        /createEvent            controllers.EventController.createEvent
+
+GET         /formEvent              controllers.EventController.index
+
+GET         /events                 controllers.EventController.getEvent
+
 GET         /participants           controllers.GroupController.getUserParticipant(id: String)
 
 # Map static resources from the /public folder to the /assets URL path

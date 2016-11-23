@@ -1,71 +1,42 @@
-2016-07-13 10:27:55,622 [INFO] from play.core.server.NettyServer in pool-12-thread-5 - Listening for HTTP on /0:0:0:0:0:0:0:0:9000
-2016-07-13 10:30:54,831 [INFO] from application in ForkJoinPool-1-worker-1 - ApplicationTimer demo: Starting application at 2016-07-13T08:30:54.818Z.
-2016-07-13 10:30:55,022 [INFO] from play.api.Play in ForkJoinPool-1-worker-1 - Application started (Dev)
-2016-07-13 10:30:55,097 [INFO] from application in application-akka.actor.default-dispatcher-2 - ReactiveMongoApi starting...
-2016-07-13 10:30:55,164 [INFO] from application in application-akka.actor.default-dispatcher-2 - ReactiveMongoApi successfully configured with DB 'gdeed'! Servers:
+2016-11-23 18:24:05,948 [INFO] from play.core.server.NettyServer in pool-15-thread-4 - Listening for HTTP on /0:0:0:0:0:0:0:0:9000
+2016-11-23 18:24:12,312 [INFO] from application in ForkJoinPool-1-worker-1 - ApplicationTimer demo: Starting application at 2016-11-23T17:24:12.304Z.
+2016-11-23 18:24:12,523 [INFO] from application in ForkJoinPool-1-worker-1 - ReactiveMongoApi starting...
+2016-11-23 18:24:12,604 [INFO] from application in ForkJoinPool-1-worker-1 - ReactiveMongoApi successfully configured with DB 'gdeed'! Servers:
 		[localhost:27017]
-2016-07-13 10:30:56,168 [INFO] from application in application-akka.actor.default-dispatcher-4 - ReactiveMongoApi starting...
-2016-07-13 10:45:08,113 [INFO] from application in ForkJoinPool-4-worker-15 - ReactiveMongoApi stopping...
-2016-07-13 10:45:08,142 [INFO] from application in ForkJoinPool-4-worker-13 - ReactiveMongoApi connections stopped. [Success(Closed)]
-2016-07-13 10:45:08,142 [WARN] from reactivemongo.core.actors.MongoDBSystem in reactivemongo-akka.actor.default-dispatcher-5 - MongoDBSystem Actor[akka://reactivemongo/user/Connection-2#1225127685] stopped.
-2016-07-13 10:45:08,179 [INFO] from application in ForkJoinPool-4-worker-15 - ApplicationTimer demo: Stopping application at 2016-07-13T08:45:08.179Z after 854s.
-2016-07-13 10:45:08,325 [INFO] from application in application-akka.actor.default-dispatcher-2 - ApplicationTimer demo: Starting application at 2016-07-13T08:45:08.324Z.
-2016-07-13 10:45:08,402 [INFO] from play.api.Play in application-akka.actor.default-dispatcher-2 - Application started (Dev)
-2016-07-13 10:45:08,418 [INFO] from application in application-akka.actor.default-dispatcher-3 - ReactiveMongoApi starting...
-2016-07-13 10:45:08,439 [INFO] from application in application-akka.actor.default-dispatcher-3 - ReactiveMongoApi successfully configured with DB 'gdeed'! Servers:
+2016-11-23 18:24:12,650 [INFO] from play.api.Play in ForkJoinPool-1-worker-1 - Application started (Dev)
+2016-11-23 18:24:58,738 [INFO] from application in ForkJoinPool-4-worker-13 - ReactiveMongoApi stopping...
+2016-11-23 18:24:58,768 [INFO] from application in ForkJoinPool-4-worker-11 - ReactiveMongoApi connections stopped. [Success(Closed)]
+2016-11-23 18:24:58,772 [WARN] from reactivemongo.core.actors.MongoDBSystem in reactivemongo-akka.actor.default-dispatcher-2 - MongoDBSystem Actor[akka://reactivemongo/user/Connection-2#-1174908676] stopped.
+2016-11-23 18:24:58,814 [INFO] from application in ForkJoinPool-4-worker-13 - ApplicationTimer demo: Stopping application at 2016-11-23T17:24:58.813Z after 46s.
+2016-11-23 18:24:58,956 [INFO] from application in application-akka.actor.default-dispatcher-3 - ApplicationTimer demo: Starting application at 2016-11-23T17:24:58.954Z.
+2016-11-23 18:24:59,030 [INFO] from application in application-akka.actor.default-dispatcher-3 - ReactiveMongoApi starting...
+2016-11-23 18:24:59,043 [INFO] from application in application-akka.actor.default-dispatcher-3 - ReactiveMongoApi successfully configured with DB 'gdeed'! Servers:
 		[localhost:27017]
-2016-07-13 10:45:08,557 [INFO] from application in application-akka.actor.default-dispatcher-3 - ReactiveMongoApi starting...
-2016-07-13 11:02:45,281 [INFO] from application in ForkJoinPool-4-worker-13 - ReactiveMongoApi stopping...
-2016-07-13 11:02:45,290 [INFO] from application in ForkJoinPool-4-worker-9 - ReactiveMongoApi connections stopped. [Success(Closed)]
-2016-07-13 11:02:45,290 [WARN] from reactivemongo.core.actors.MongoDBSystem in reactivemongo-akka.actor.default-dispatcher-2 - MongoDBSystem Actor[akka://reactivemongo/user/Connection-5#-1029329417] stopped.
-2016-07-13 11:02:45,313 [INFO] from application in ForkJoinPool-4-worker-13 - ApplicationTimer demo: Stopping application at 2016-07-13T09:02:45.313Z after 1057s.
-2016-07-13 11:02:45,427 [INFO] from application in application-akka.actor.default-dispatcher-4 - ApplicationTimer demo: Starting application at 2016-07-13T09:02:45.427Z.
-2016-07-13 11:02:45,491 [INFO] from play.api.Play in application-akka.actor.default-dispatcher-4 - Application started (Dev)
-2016-07-13 11:02:45,500 [INFO] from application in application-akka.actor.default-dispatcher-5 - ReactiveMongoApi starting...
-2016-07-13 11:02:45,512 [INFO] from application in application-akka.actor.default-dispatcher-5 - ReactiveMongoApi successfully configured with DB 'gdeed'! Servers:
+2016-11-23 18:24:59,054 [INFO] from play.api.Play in application-akka.actor.default-dispatcher-3 - Application started (Dev)
+2016-11-23 18:28:05,256 [INFO] from application in ForkJoinPool-4-worker-11 - ReactiveMongoApi stopping...
+2016-11-23 18:28:05,267 [INFO] from application in ForkJoinPool-4-worker-9 - ReactiveMongoApi connections stopped. [Success(Closed)]
+2016-11-23 18:28:05,267 [WARN] from reactivemongo.core.actors.MongoDBSystem in reactivemongo-akka.actor.default-dispatcher-7 - MongoDBSystem Actor[akka://reactivemongo/user/Connection-5#1310813885] stopped.
+2016-11-23 18:28:05,280 [INFO] from application in ForkJoinPool-4-worker-11 - ApplicationTimer demo: Stopping application at 2016-11-23T17:28:05.280Z after 187s.
+2016-11-23 18:28:05,409 [INFO] from application in application-akka.actor.default-dispatcher-4 - ApplicationTimer demo: Starting application at 2016-11-23T17:28:05.408Z.
+2016-11-23 18:28:05,477 [INFO] from application in application-akka.actor.default-dispatcher-4 - ReactiveMongoApi starting...
+2016-11-23 18:28:05,488 [INFO] from application in application-akka.actor.default-dispatcher-4 - ReactiveMongoApi successfully configured with DB 'gdeed'! Servers:
 		[localhost:27017]
-2016-07-13 11:02:45,641 [INFO] from application in application-akka.actor.default-dispatcher-5 - ReactiveMongoApi starting...
-2016-07-13 11:03:35,056 [INFO] from application in ForkJoinPool-4-worker-9 - ReactiveMongoApi stopping...
-2016-07-13 11:03:35,064 [INFO] from application in ForkJoinPool-4-worker-5 - ReactiveMongoApi connections stopped. [Success(Closed)]
-2016-07-13 11:03:35,064 [WARN] from reactivemongo.core.actors.MongoDBSystem in reactivemongo-akka.actor.default-dispatcher-3 - MongoDBSystem Actor[akka://reactivemongo/user/Connection-8#1503419995] stopped.
-2016-07-13 11:03:35,074 [INFO] from application in ForkJoinPool-4-worker-9 - ApplicationTimer demo: Stopping application at 2016-07-13T09:03:35.074Z after 50s.
-2016-07-13 11:03:35,204 [INFO] from application in application-akka.actor.default-dispatcher-3 - ApplicationTimer demo: Starting application at 2016-07-13T09:03:35.203Z.
-2016-07-13 11:03:35,304 [INFO] from play.api.Play in application-akka.actor.default-dispatcher-3 - Application started (Dev)
-2016-07-13 11:03:35,311 [INFO] from application in application-akka.actor.default-dispatcher-5 - ReactiveMongoApi starting...
-2016-07-13 11:03:35,323 [INFO] from application in application-akka.actor.default-dispatcher-5 - ReactiveMongoApi successfully configured with DB 'gdeed'! Servers:
+2016-11-23 18:28:05,495 [INFO] from play.api.Play in application-akka.actor.default-dispatcher-4 - Application started (Dev)
+2016-11-23 18:31:36,083 [INFO] from application in ForkJoinPool-4-worker-9 - ReactiveMongoApi stopping...
+2016-11-23 18:31:36,093 [INFO] from application in ForkJoinPool-4-worker-5 - ReactiveMongoApi connections stopped. [Success(Closed)]
+2016-11-23 18:31:36,093 [WARN] from reactivemongo.core.actors.MongoDBSystem in reactivemongo-akka.actor.default-dispatcher-3 - MongoDBSystem Actor[akka://reactivemongo/user/Connection-8#1190093319] stopped.
+2016-11-23 18:31:36,106 [INFO] from application in ForkJoinPool-4-worker-9 - ApplicationTimer demo: Stopping application at 2016-11-23T17:31:36.106Z after 211s.
+2016-11-23 18:31:36,240 [INFO] from application in application-akka.actor.default-dispatcher-7 - ApplicationTimer demo: Starting application at 2016-11-23T17:31:36.239Z.
+2016-11-23 18:31:36,317 [INFO] from application in application-akka.actor.default-dispatcher-7 - ReactiveMongoApi starting...
+2016-11-23 18:31:36,330 [INFO] from application in application-akka.actor.default-dispatcher-7 - ReactiveMongoApi successfully configured with DB 'gdeed'! Servers:
 		[localhost:27017]
-2016-07-13 11:03:35,436 [INFO] from application in application-akka.actor.default-dispatcher-7 - ReactiveMongoApi starting...
-2016-07-13 11:04:57,774 [INFO] from application in ForkJoinPool-4-worker-5 - ReactiveMongoApi stopping...
-2016-07-13 11:04:57,782 [INFO] from application in ForkJoinPool-4-worker-1 - ReactiveMongoApi connections stopped. [Success(Closed)]
-2016-07-13 11:04:57,782 [WARN] from reactivemongo.core.actors.MongoDBSystem in reactivemongo-akka.actor.default-dispatcher-4 - MongoDBSystem Actor[akka://reactivemongo/user/Connection-11#-504108405] stopped.
-2016-07-13 11:04:57,799 [INFO] from application in ForkJoinPool-4-worker-5 - ApplicationTimer demo: Stopping application at 2016-07-13T09:04:57.798Z after 82s.
-2016-07-13 11:04:57,957 [INFO] from application in application-akka.actor.default-dispatcher-2 - ApplicationTimer demo: Starting application at 2016-07-13T09:04:57.956Z.
-2016-07-13 11:04:58,072 [INFO] from play.api.Play in application-akka.actor.default-dispatcher-2 - Application started (Dev)
-2016-07-13 11:04:58,086 [INFO] from application in application-akka.actor.default-dispatcher-6 - ReactiveMongoApi starting...
-2016-07-13 11:04:58,099 [INFO] from application in application-akka.actor.default-dispatcher-6 - ReactiveMongoApi successfully configured with DB 'gdeed'! Servers:
+2016-11-23 18:31:36,337 [INFO] from play.api.Play in application-akka.actor.default-dispatcher-7 - Application started (Dev)
+2016-11-23 18:32:43,493 [INFO] from application in ForkJoinPool-4-worker-5 - ReactiveMongoApi stopping...
+2016-11-23 18:32:43,507 [INFO] from application in ForkJoinPool-4-worker-15 - ReactiveMongoApi connections stopped. [Success(Closed)]
+2016-11-23 18:32:43,507 [WARN] from reactivemongo.core.actors.MongoDBSystem in reactivemongo-akka.actor.default-dispatcher-2 - MongoDBSystem Actor[akka://reactivemongo/user/Connection-11#-6986361] stopped.
+2016-11-23 18:32:43,520 [INFO] from application in ForkJoinPool-4-worker-5 - ApplicationTimer demo: Stopping application at 2016-11-23T17:32:43.520Z after 67s.
+2016-11-23 18:32:43,660 [INFO] from application in application-akka.actor.default-dispatcher-3 - ApplicationTimer demo: Starting application at 2016-11-23T17:32:43.659Z.
+2016-11-23 18:32:43,739 [INFO] from application in application-akka.actor.default-dispatcher-3 - ReactiveMongoApi starting...
+2016-11-23 18:32:43,748 [INFO] from application in application-akka.actor.default-dispatcher-3 - ReactiveMongoApi successfully configured with DB 'gdeed'! Servers:
 		[localhost:27017]
-2016-07-13 11:04:58,216 [INFO] from application in application-akka.actor.default-dispatcher-7 - ReactiveMongoApi starting...
-2016-07-13 11:17:24,486 [INFO] from application in ForkJoinPool-4-worker-1 - ReactiveMongoApi stopping...
-2016-07-13 11:17:24,494 [WARN] from reactivemongo.core.actors.MongoDBSystem in reactivemongo-akka.actor.default-dispatcher-7 - MongoDBSystem Actor[akka://reactivemongo/user/Connection-14#-256862427] stopped.
-2016-07-13 11:17:24,494 [INFO] from application in ForkJoinPool-4-worker-11 - ReactiveMongoApi connections stopped. [Success(Closed)]
-2016-07-13 11:17:24,513 [INFO] from application in ForkJoinPool-4-worker-1 - ApplicationTimer demo: Stopping application at 2016-07-13T09:17:24.513Z after 747s.
-2016-07-13 11:17:24,618 [INFO] from application in application-akka.actor.default-dispatcher-5 - ApplicationTimer demo: Starting application at 2016-07-13T09:17:24.617Z.
-2016-07-13 11:17:24,669 [INFO] from play.api.Play in application-akka.actor.default-dispatcher-5 - Application started (Dev)
-2016-07-13 11:17:24,674 [INFO] from application in application-akka.actor.default-dispatcher-4 - ReactiveMongoApi starting...
-2016-07-13 11:17:24,683 [INFO] from application in application-akka.actor.default-dispatcher-4 - ReactiveMongoApi successfully configured with DB 'gdeed'! Servers:
-		[localhost:27017]
-2016-07-13 11:17:24,801 [INFO] from application in application-akka.actor.default-dispatcher-4 - ReactiveMongoApi starting...
-2016-07-13 11:21:42,679 [INFO] from application in ForkJoinPool-4-worker-11 - ReactiveMongoApi stopping...
-2016-07-13 11:21:42,689 [INFO] from application in ForkJoinPool-4-worker-5 - ReactiveMongoApi connections stopped. [Success(Closed)]
-2016-07-13 11:21:42,689 [WARN] from reactivemongo.core.actors.MongoDBSystem in reactivemongo-akka.actor.default-dispatcher-3 - MongoDBSystem Actor[akka://reactivemongo/user/Connection-17#1699004164] stopped.
-2016-07-13 11:21:42,707 [INFO] from application in ForkJoinPool-4-worker-11 - ApplicationTimer demo: Stopping application at 2016-07-13T09:21:42.707Z after 258s.
-2016-07-13 11:21:42,841 [INFO] from application in application-akka.actor.default-dispatcher-3 - ApplicationTimer demo: Starting application at 2016-07-13T09:21:42.840Z.
-2016-07-13 11:21:42,892 [INFO] from play.api.Play in application-akka.actor.default-dispatcher-3 - Application started (Dev)
-2016-07-13 11:21:42,898 [INFO] from application in application-akka.actor.default-dispatcher-5 - ReactiveMongoApi starting...
-2016-07-13 11:21:42,906 [INFO] from application in application-akka.actor.default-dispatcher-5 - ReactiveMongoApi successfully configured with DB 'gdeed'! Servers:
-		[localhost:27017]
-2016-07-13 11:21:43,020 [INFO] from application in application-akka.actor.default-dispatcher-3 - ReactiveMongoApi starting...
-2016-07-13 17:03:24,671 [INFO] from application in ForkJoinPool-4-worker-5 - ReactiveMongoApi stopping...
-2016-07-13 17:03:24,681 [WARN] from reactivemongo.core.actors.MongoDBSystem in reactivemongo-akka.actor.default-dispatcher-4 - MongoDBSystem Actor[akka://reactivemongo/user/Connection-20#-478477426] stopped.
-2016-07-13 17:03:24,681 [INFO] from application in ForkJoinPool-4-worker-1 - ReactiveMongoApi connections stopped. [Success(Closed)]
-2016-07-13 17:03:24,690 [INFO] from application in ForkJoinPool-4-worker-5 - ApplicationTimer demo: Stopping application at 2016-07-13T15:03:24.690Z after 20502s.
+2016-11-23 18:32:43,756 [INFO] from play.api.Play in application-akka.actor.default-dispatcher-3 - Application started (Dev)

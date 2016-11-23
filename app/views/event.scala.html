@@ -1,0 +1,31 @@
+@(eventForm: Form[Tuple10[Option[String],Option[User],
+        String, String,  String,
+        Option[Set[String]],Boolean,
+        java.util.Date, java.util.Date, Option[Set[Question]]]])(implicit config: play.api.Configuration)
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Sign In</title>
+        <link rel="stylesheet" media="screen" href="@routes.Assets.versioned("stylesheets/main.css")">
+        <link rel="shortcut icon" type="image/png" href="@routes.Assets.versioned("images/favicon.png")">
+
+    </head>
+    <body>
+
+        <form action='@routes.EventController.createEvent()' method="POST">
+            <select name="eventType" id="eventType">
+                <option value="LostFound">Lost or Found</option>
+                <option value="Help">Help</option>
+            </select>
+            <input id="title" name="title" type="text"/>
+            <input id="description" name="description" type="text"/>
+            <input id="isOpen" name="isOpen" type="checkbox" value="true"/>
+            <input id="startDate" name="startDate" type="date"/>
+            <input id="endDate" name="endDate" type="date"/>
+            <input type="submit" value="OK"/>
+        </form>
+
+    </body>
+</html>
+
