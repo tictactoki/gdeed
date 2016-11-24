@@ -4,6 +4,7 @@ import com.google.inject.{Inject, Singleton}
 import controllers.actions.MongoCrud
 import controllers.interfaces.GroupControllerInterface
 import models.{User, Group}
+import play.api.Configuration
 import play.modules.reactivemongo.ReactiveMongoApi
 import reactivemongo.api.commands.WriteResult
 import models.commons.MongoCollectionNames._
@@ -22,8 +23,8 @@ import scala.util.Try
   * Created by stephane on 14/04/2016.
   */
 @Singleton
-class GroupController @Inject()(override val reactiveMongoApi: ReactiveMongoApi)(implicit context: ExecutionContext)
-  extends CommonController(reactiveMongoApi) with MongoCrud[Group] with GroupControllerInterface {
+class GroupController @Inject()(override val reactiveMongoApi: ReactiveMongoApi, override implicit val config: Configuration, override implicit val webJarAssets: WebJarAssets)(implicit context: ExecutionContext)
+  extends CommonController(reactiveMongoApi, config, webJarAssets) with MongoCrud[Group] with GroupControllerInterface {
 
   override implicit lazy val mainCollection = getJSONCollection(Groups)
 

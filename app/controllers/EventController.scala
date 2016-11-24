@@ -21,8 +21,8 @@ import play.modules.reactivemongo.json._
   * Created by stephane on 18/07/2016.
   */
 @Singleton
-class EventController @Inject()(override val reactiveMongoApi: ReactiveMongoApi, implicit val config: Configuration)(implicit context: ExecutionContext)
-  extends CommonController(reactiveMongoApi) with MongoCrud[Event] {
+class EventController @Inject()(override val reactiveMongoApi: ReactiveMongoApi, override implicit val config: Configuration, override implicit val webJarAssets: WebJarAssets)(implicit context: ExecutionContext)
+  extends CommonController(reactiveMongoApi, config, webJarAssets) with MongoCrud[Event] {
 
   override implicit val mainCollection: Future[JSONCollection] = getJSONCollection(Events)
 
@@ -54,7 +54,7 @@ class EventController @Inject()(override val reactiveMongoApi: ReactiveMongoApi,
   }
 
   def index = Action {
-    Ok(views.html.event(Event.eventForm))
+    Ok(views.html.event())
   }
 
 }

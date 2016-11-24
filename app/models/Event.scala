@@ -41,10 +41,9 @@ object Event {
 
   import Question._
 
-  implicit val eventReads: Reads[Event] = new Reads[Event]{
+  implicit val eventReads: Reads[Event] = new Reads[Event] {
     override def reads(json: JsValue): JsResult[Event] = json match {
       case obj: JsObject =>
-        println(obj)
         (obj \ CF.EventType).as[String] match {
           case "LostFound" => LostFoundEvent.lostEventFormat.reads(json)
           case "Help" => HelpEvent.helpEventFormat.reads(json)
@@ -54,12 +53,9 @@ object Event {
   }
 
   implicit val eventWrites: OWrites[Event] = new OWrites[Event] {
-    override def writes(o: Event): JsObject = {
-      println(o)
-      o match {
-        case loe:LostFoundEvent => LostFoundEvent.lostEventFormat.writes(loe)
-        case he:HelpEvent => HelpEvent.helpEventFormat.writes(he)
-      }
+    override def writes(o: Event): JsObject = o match {
+      case loe: LostFoundEvent => LostFoundEvent.lostEventFormat.writes(loe)
+      case he: HelpEvent => HelpEvent.helpEventFormat.writes(he)
     }
   }
 
@@ -68,10 +64,9 @@ object Event {
             participants: Option[Set[String]], isOpen: Boolean,
             creationDate: Date, endDate: Date,
             questions: Option[Set[Question]]): Event = {
-    println(eventType)
     eventType match {
-      case "LostFound" => LostFoundEvent(id,owner,eventType,title,description, isOpen,creationDate,endDate,questions.getOrElse(Set.empty))
-      case "Help" => HelpEvent(id,owner,eventType,title,description,participants.getOrElse(Set.empty),isOpen,creationDate,endDate)
+      case "LostFound" => LostFoundEvent(id, owner, eventType, title, description, isOpen, creationDate, endDate, questions.getOrElse(Set.empty))
+      case "Help" => HelpEvent(id, owner, eventType, title, description, participants.getOrElse(Set.empty), isOpen, creationDate, endDate)
     }
   }
 
@@ -88,30 +83,8 @@ object Event {
       EndDate -> date,
       Questions -> optional(set(questionMapping))
     )
-    //eventMapping
   )
 
-  val eventMapping = mapping(
-    Id -> optional(nonEmptyText),
-    Owner -> optional(userMapping),
-    CF.EventType -> text,
-    Title -> text(2),
-    Description -> text,
-    Participants -> optional(set(text)),
-    IsOpen -> checked(IsOpen),
-    StartDate -> date,
-    EndDate -> date,
-    Questions -> optional(set(questionMapping))
-  )(Event.apply){ event =>
-    event match {
-      case l: LostFoundEvent =>
-        Some(l._id, l.owner, l.eventType, l.title, l.description, Option.empty[Set[String]], l.isOpen, l.creationDate,
-          l.endDate, Option(l.questions))
-      case h: HelpEvent =>
-        Some(h._id, h.owner, h.eventType, h.title, h.description, Option(h.participants), h.isOpen, h.creationDate,
-          h.endDate, Option.empty[Set[Question]])
-    }
-  }
 }
 
 
@@ -176,12 +149,6 @@ object LostFoundEvent {
     EndDate -> date,
     Questions -> set(questionMapping)
   )(LostFoundEvent.apply)(LostFoundEvent.unapply)
-
-
-  /*def unapply(_id: Option[String], owner: User, title: String, description: String, isOpen: Boolean, creationDate: Date, endDate: Date, questions: Set[Question]) = {
-    Some(LostFoundEvent(_id,owner,title,description,isOpen,creationDate,endDate,questions))
-  }*/
-
 
 }
 

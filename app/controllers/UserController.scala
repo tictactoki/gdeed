@@ -7,6 +7,7 @@ import models.commons.{Helpers, MongoCollectionNames}
 import models.commons.CollectionFields._
 import models.{SignIn, User}
 import org.mindrot.jbcrypt.BCrypt
+import play.api.Configuration
 import play.api.data.Form
 import play.api.libs.json.Json
 import play.api.mvc.{Session, Action}
@@ -23,8 +24,8 @@ import scala.util.Try
   * Created by stephane on 04/04/2016.
   */
 @Singleton
-class UserController @Inject()(override val reactiveMongoApi: ReactiveMongoApi)(implicit exec: ExecutionContext)
-  extends CommonController(reactiveMongoApi) with MongoCrud[User] with UserControllerInterface {
+class UserController @Inject()(override val reactiveMongoApi: ReactiveMongoApi, override implicit val config: Configuration, override implicit val webJarAssets: WebJarAssets)(implicit exec: ExecutionContext)
+  extends CommonController(reactiveMongoApi, config, webJarAssets) with MongoCrud[User] with UserControllerInterface {
 
   implicit override lazy val mainCollection: Future[JSONCollection] = getJSONCollection(MongoCollectionNames.Users)
 

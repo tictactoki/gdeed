@@ -3,6 +3,7 @@ package controllers
 import com.google.inject.{Inject, Singleton}
 import models.{Part, User}
 import models.commons.CollectionFields._
+import play.api.Configuration
 import play.api.data.Form
 import play.api.libs.json.{JsObject, JsValue, Json, Writes}
 import play.api.mvc.{Controller, Result}
@@ -19,7 +20,7 @@ import reactivemongo.api.commands.WriteResult
 /**
   * Created by stephane on 07/04/2016.
   */
-abstract class CommonController @Inject ()(val reactiveMongoApi: ReactiveMongoApi)(implicit exec: ExecutionContext)
+abstract class CommonController @Inject ()(val reactiveMongoApi: ReactiveMongoApi, implicit val config: Configuration, implicit val webJarAssets: WebJarAssets)(implicit exec: ExecutionContext)
   extends Controller with MongoController with ReactiveMongoComponents {
 
   lazy val users = getJSONCollection(Users)
@@ -43,6 +44,7 @@ abstract class CommonController @Inject ()(val reactiveMongoApi: ReactiveMongoAp
 
   /**
     * Send errors as a json result
+ *
     * @param form
     * @tparam T
     * @return
