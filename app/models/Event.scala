@@ -43,7 +43,8 @@ object Event {
 
   implicit val eventReads: Reads[Event] = new Reads[Event]{
     override def reads(json: JsValue): JsResult[Event] = json match {
-      case obj: JSONObject =>
+      case obj: JsObject =>
+        println(obj)
         (obj \ CF.EventType).as[String] match {
           case "LostFound" => LostFoundEvent.lostEventFormat.reads(json)
           case "Help" => HelpEvent.helpEventFormat.reads(json)
@@ -53,9 +54,12 @@ object Event {
   }
 
   implicit val eventWrites: OWrites[Event] = new OWrites[Event] {
-    override def writes(o: Event): JsObject = o match {
-      case loe:LostFoundEvent => LostFoundEvent.lostEventFormat.writes(loe)
-      case he:HelpEvent => HelpEvent.helpEventFormat.writes(he)
+    override def writes(o: Event): JsObject = {
+      println(o)
+      o match {
+        case loe:LostFoundEvent => LostFoundEvent.lostEventFormat.writes(loe)
+        case he:HelpEvent => HelpEvent.helpEventFormat.writes(he)
+      }
     }
   }
 
@@ -66,8 +70,8 @@ object Event {
             questions: Option[Set[Question]]): Event = {
     println(eventType)
     eventType match {
-      case "LostFound" => LostFoundEvent(id,owner,title,description, isOpen,creationDate,endDate,questions.getOrElse(Set.empty))
-      case "Help" => HelpEvent(id,owner,title,description,participants.getOrElse(Set.empty),isOpen,creationDate,endDate)
+      case "LostFound" => LostFoundEvent(id,owner,eventType,title,description, isOpen,creationDate,endDate,questions.getOrElse(Set.empty))
+      case "Help" => HelpEvent(id,owner,eventType,title,description,participants.getOrElse(Set.empty),isOpen,creationDate,endDate)
     }
   }
 
@@ -146,13 +150,14 @@ object Question {
 
 case class LostFoundEvent(override val _id: Option[String],
                           override val owner: Option[User],
+                          override val eventType: String = EventType(LostFound),
                           override val title: String,
                           override val description: String,
                           override val isOpen: Boolean,
                           override val creationDate: Date,
                           override val endDate: Date,
                           questions: Set[Question] = Set.empty)
-  extends Event(_id, owner, EventType(LostFound), title, description, isOpen, creationDate, endDate)
+  extends Event(_id, owner, eventType, title, description, isOpen, creationDate, endDate)
 
 object LostFoundEvent {
 
@@ -163,6 +168,7 @@ object LostFoundEvent {
   val lostForm = mapping(
     Id -> optional(nonEmptyText),
     Owner -> optional(userMapping),
+    CF.EventType -> text,
     Title -> text(2),
     Description -> text,
     IsOpen -> checked(IsOpen),
@@ -185,6 +191,7 @@ object HelpEvent {
   val helpMapping = mapping(
     Id -> optional(nonEmptyText),
     Owner -> optional(userMapping),
+    CF.EventType -> text,
     Title -> text(2),
     Description -> text,
     Participants -> set(text),
@@ -197,6 +204,7 @@ object HelpEvent {
 
 case class HelpEvent(override val _id: Option[String],
                      override val owner: Option[User],
+                     override val eventType: String = EventType(Help),
                      override val title: String,
                      override val description: String,
                      participants: Set[String] = Set.empty,
@@ -204,4 +212,4 @@ case class HelpEvent(override val _id: Option[String],
                      override val creationDate: Date,
                      override val endDate: Date
                     )
-  extends Event(_id, owner, EventType(Help), title, description, isOpen, creationDate, endDate)
+  extends Event(_id, owner, eventType, title, description, isOpen, creationDate, endDate)
