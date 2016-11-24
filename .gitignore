@@ -6,3 +6,7 @@ target
 /.project
 /.settings
 /RUNNING_PID
+public/bower_components/*
+project/project
+project/target/*
+public/bower_components/
